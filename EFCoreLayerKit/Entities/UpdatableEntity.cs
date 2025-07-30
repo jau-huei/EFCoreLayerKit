@@ -9,6 +9,6 @@
         /// <summary>
         /// 数据最后更新时间。
         /// </summary>
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; }
     }
 }

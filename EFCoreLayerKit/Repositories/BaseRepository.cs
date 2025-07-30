@@ -231,6 +231,14 @@ namespace EFCoreLayerKit.Repositories
                         return FResult<TEntity>.Fail("Entity with the same Id already exists.", ErrorCode.DuplicateData, entity.Id);
                 }
 
+                // 设置创建时间
+                entity.CreatedAt = DateTime.Now;
+                // 如果是 UpdatableEntity，也设置更新时间
+                if (entity is UpdatableEntity updatable)
+                {
+                    updatable.UpdatedAt = DateTime.Now;
+                }
+
                 _dbSet.Add(entity);
                 await _context.SaveChangesAsync();
                 return FResult<TEntity>.Ok(entity, "Entity added successfully.");
