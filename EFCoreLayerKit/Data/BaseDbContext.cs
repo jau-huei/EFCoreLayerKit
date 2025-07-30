@@ -85,6 +85,22 @@ namespace EFCoreLayerKit.Data
                     }
                 }
             }
+
+            // 为所有包含 IsDeleted 属性的实体添加软删除全局过滤器
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var clrType = entityType.ClrType;
+                var isDeletedProp = clrType.GetProperty("IsDeleted");
+                if (isDeletedProp != null && isDeletedProp.PropertyType == typeof(bool))
+                {
+                    // 构建 e => !e.IsDeleted 的表达式
+                    var parameter = System.Linq.Expressions.Expression.Parameter(clrType, "e");
+                    var property = System.Linq.Expressions.Expression.Property(parameter, isDeletedProp);
+                    var notDeleted = System.Linq.Expressions.Expression.Equal(property, System.Linq.Expressions.Expression.Constant(false));
+                    var lambda = System.Linq.Expressions.Expression.Lambda(notDeleted, parameter);
+                    modelBuilder.Entity(clrType).HasQueryFilter(lambda);
+                }
+            }
         }
 
         /// <summary>

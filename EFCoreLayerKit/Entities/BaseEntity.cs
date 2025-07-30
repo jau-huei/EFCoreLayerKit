@@ -17,6 +17,11 @@ namespace EFCoreLayerKit.Entities
         public long Id { get; set; }
 
         /// <summary>
+        /// 软删除标志，表示实体是否被删除。
+        /// </summary>
+        public bool IsDeleted { get; set; } = false;
+
+        /// <summary>
         /// 创建时间。
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
