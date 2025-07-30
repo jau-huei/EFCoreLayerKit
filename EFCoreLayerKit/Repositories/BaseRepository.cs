@@ -303,5 +303,95 @@ namespace EFCoreLayerKit.Repositories
                 return FResult.Fail("Exception occurred while soft deleting entity: {0}", ErrorCode.Exception, ex, ex.Message);
             }
         }
+
+        /// <summary>
+        /// 批量新增实体（使用事务）。
+        /// </summary>
+        /// <param name="entities">要新增的实体集合。</param>
+        /// <returns>包含操作结果的 FResult 对象。</returns>
+        public virtual async Task<FResult> BatchAddAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null || !entities.Any())
+                return FResult.Fail("Entities collection cannot be null or empty.", ErrorCode.InvalidParameter);
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                foreach (var entity in entities)
+                {
+                    entity.CreatedAt = DateTime.Now;
+                    if (entity is UpdatableEntity updatable)
+                        updatable.UpdatedAt = DateTime.Now;
+                }
+                await _dbSet.AddRangeAsync(entities);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return FResult.Ok("Batch add successful.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return FResult.Fail("Exception occurred during batch add: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 批量物理删除实体（使用事务）。
+        /// </summary>
+        /// <param name="ids">要删除的实体主键集合。</param>
+        /// <returns>包含操作结果的 FResult 对象。</returns>
+        public virtual async Task<FResult> BatchDeleteAsync(IEnumerable<long> ids)
+        {
+            if (ids == null || !ids.Any())
+                return FResult.Fail("Ids collection cannot be null or empty.", ErrorCode.InvalidParameter);
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var entities = await _dbSet.Where(e => ids.Contains(e.Id)).ToListAsync();
+                if (entities.Count != ids.Count())
+                    return FResult.Fail("Some entities to delete were not found.", ErrorCode.NotFound);
+                _dbSet.RemoveRange(entities);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return FResult.Ok("Batch delete successful.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return FResult.Fail("Exception occurred during batch delete: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 批量软删除实体（使用事务）。
+        /// </summary>
+        /// <param name="ids">要软删除的实体主键集合。</param>
+        /// <returns>包含操作结果的 FResult 对象。</returns>
+        public virtual async Task<FResult> BatchSoftDeleteAsync(IEnumerable<long> ids)
+        {
+            if (ids == null || !ids.Any())
+                return FResult.Fail("Ids collection cannot be null or empty.", ErrorCode.InvalidParameter);
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var entities = await _dbSet.Where(e => ids.Contains(e.Id)).ToListAsync();
+                if (entities.Count != ids.Count())
+                    return FResult.Fail("Some entities to soft delete were not found.", ErrorCode.NotFound);
+                var prop = typeof(TEntity).GetProperty("IsDeleted");
+                if (prop == null || prop.PropertyType != typeof(bool))
+                    return FResult.Fail("Entity does not support soft delete (missing IsDeleted property).", ErrorCode.OperationFailed);
+                foreach (var entity in entities)
+                {
+                    prop.SetValue(entity, true);
+                }
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return FResult.Ok("Batch soft delete successful.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return FResult.Fail("Exception occurred during batch soft delete: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
     }
 }
