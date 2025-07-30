@@ -1,40 +1,129 @@
+[English](https://github.com/jau-huei/EFCoreLayerKit/blob/master/README.en.md) | [ç®€ä½“ä¸­æ–‡](https://github.com/jau-huei/EFCoreLayerKit/blob/master/README.md)
+
+[![NuGet](https://img.shields.io/nuget/v/EFCoreLayerKit.svg?label=NuGet)](https://www.nuget.org/packages/EFCoreLayerKit)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/EFCoreLayerKit)](https://www.nuget.org/packages/EFCoreLayerKit)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://licenses.nuget.org/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/jau-huei/EFCoreLayerKit?style=social)](https://github.com/jau-huei/EFCoreLayerKit)
+
+
 # EFCoreLayerKit
 
-EFCoreLayerKit ÊÇÒ»¸ö»ùÓÚ Entity Framework Core µÄÍ¨ÓÃÊı¾İ·ÃÎÊ²ã¹¤¾ß°ü£¬Ö§³Ö×Ô¶¯²Ö´¢¡¢DTO Ó³Éä¡¢ÈíÉ¾³ı¡¢×Ô¶¯Ç¨ÒÆµÈ¹¦ÄÜ£¬ÊÊÓÃÓÚ .NET 8+ ÏîÄ¿¡£
+EFCoreLayerKit æ˜¯ä¸€ä¸ªåŸºäº Entity Framework Core çš„é€šç”¨æ•°æ®è®¿é—®å±‚å·¥å…·åŒ…ï¼Œæ”¯æŒè‡ªåŠ¨ä»“å‚¨ã€DTO æ˜ å°„ã€è½¯åˆ é™¤ã€è‡ªåŠ¨è¿ç§»ç­‰åŠŸèƒ½ï¼Œé€‚ç”¨äº .NET 8+ é¡¹ç›®ã€‚
 
-## Ö÷ÒªÌØĞÔ
-- ×Ô¶¯×¢²áËùÓĞ¼Ì³Ğ×Ô `BaseDbContext` µÄÉÏÏÂÎÄ£¬²¢×Ô¶¯Ç¨ÒÆÊı¾İ¿â½á¹¹
-- ×Ô¶¯×¢²áËùÓĞ¼Ì³Ğ×Ô `BaseRepository<TEntity>` µÄ²Ö´¢Àà
-- Ö§³ÖÈíÉ¾³ı¡¢ÀÖ¹ÛËø¡¢ÅúÁ¿²Ù×÷µÈ³£ÓÃÊı¾İ·ÃÎÊÄ£Ê½
-- Ö§³Ö DTO ÓëÊµÌåµÄ×Ô¶¯Ë«ÏòÓ³Éä£¨»ùÓÚ AutoMapper£©
-- ÊÊÓÃÓÚ Blazor¡¢ASP.NET Core µÈÒÀÀµ×¢Èë³¡¾°
+---
 
-## ¿ìËÙ¿ªÊ¼
+## ä¸»è¦ç‰¹æ€§
+- è‡ªåŠ¨æ³¨å†Œæ‰€æœ‰ç»§æ‰¿è‡ª `BaseDbContext` çš„ä¸Šä¸‹æ–‡ï¼Œå¹¶è‡ªåŠ¨è¿ç§»æ•°æ®åº“ç»“æ„
+- è‡ªåŠ¨æ³¨å†Œæ‰€æœ‰ç»§æ‰¿è‡ª `BaseRepository<TEntity>` çš„ä»“å‚¨ç±»
+- æ”¯æŒè½¯åˆ é™¤ã€ä¹è§‚é”ã€æ‰¹é‡æ“ä½œç­‰å¸¸ç”¨æ•°æ®è®¿é—®æ¨¡å¼
+- æ”¯æŒ DTO ä¸å®ä½“çš„è‡ªåŠ¨åŒå‘æ˜ å°„ï¼ˆåŸºäº AutoMapperï¼‰
+- ä¸°å¯Œçš„é€šç”¨ç»“æœç±»å‹ï¼ˆFResult/FResult<T>/FPagedResult<T>ï¼‰
+- é€‚ç”¨äº Blazorã€ASP.NET Core ç­‰ä¾èµ–æ³¨å…¥åœºæ™¯
 
-1. **°²×°ÒÀÀµ**
+---
 
-È·±£ÄãµÄÏîÄ¿ÒÑÒıÓÃ EntityFrameworkCore¡¢AutoMapper ¼°±¾¿â¡£
+## å®‰è£…ä¾èµ–
 
-2. **¶¨Òå DbContext ºÍ Repository**
-public class MyDbContext : BaseDbContext { /* ... */ }
-public class MyEntityRepository : BaseRepository<MyEntity> { public MyEntityRepository(MyDbContext ctx) : base(ctx) { } }
-3. **ÔÚ³ÌĞòÆô¶¯Ê±×¢²á·şÎñ**
-// ÔÚ Program.cs »ò Startup.cs
-services.AddEFCoreLayerKit();
-4. **×Ô¶¯Ç¨ÒÆÊı¾İ¿â**
+ç¡®ä¿ä½ çš„é¡¹ç›®å·²å¼•ç”¨ä»¥ä¸‹ NuGet åŒ…ï¼š
+- Microsoft.EntityFrameworkCore
+- Microsoft.EntityFrameworkCore.Sqlite
+- AutoMapper
+- EFCoreLayerKit
+- System.Linq.Dynamic.Core
+- EFCoreLayerKitï¼ˆæœ¬åº“ï¼‰
 
-×¢²áÊ±»á×Ô¶¯µ÷ÓÃËùÓĞ DbContext µÄ `EnsureDatabaseMigrated()`£¬ÎŞĞèÊÖ¶¯Ç¨ÒÆ¡£
+---
 
-5. **Ê¹ÓÃ²Ö´¢ºÍÉÏÏÂÎÄ**
-public class MyService
+## å¿«é€Ÿå¼€å§‹
+
+1. **å®šä¹‰å®ä½“å’Œ DbContext**
+```csharp
+public class Author : BaseEntity
 {
-    private readonly MyEntityRepository _repo;
-    public MyService(MyEntityRepository repo) { _repo = repo; }
-    // ...
+    public string Name { get; set; }
+    public virtual ICollection<Book> Books { get; set; }
 }
-## ½ø½×ÓÃ·¨
-- Ö§³Ö×Ô¶¨Òå²Ö´¢¡¢DTO Ó³Éä¡¢È«¾Ö²éÑ¯¹ıÂËµÈ
-- Ïê¼ûÔ´Âë×¢ÊÍÓë¸÷ÀàÀ©Õ¹·½·¨
 
-## Ğí¿ÉÖ¤
+public class Book : BaseEntity
+{
+    public string Title { get; set; }
+    public long AuthorId { get; set; }
+    public virtual Author Author { get; set; }
+}
+
+public class TestDbContext : BaseDbContext
+{
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<Book> Books { get; set; }
+}
+```
+2. **å®šä¹‰ä»“å‚¨ç±»**
+```csharp
+public class AuthorRepository : BaseRepository<Author>
+{
+    public AuthorRepository(TestDbContext ctx) : base(ctx) { }
+}
+
+public class BookRepository : BaseRepository<Book>
+{
+    public BookRepository(TestDbContext ctx) : base(ctx) { }
+}
+```
+3. **æ³¨å†ŒæœåŠ¡ä¸è‡ªåŠ¨è¿ç§»**
+
+åœ¨ `Program.cs` ä¸­ï¼š
+```csharp
+var services = new ServiceCollection();
+services.AddEFCoreLayerKit();
+var provider = services.BuildServiceProvider();
+```
+æ³¨å†Œæ—¶ä¼šè‡ªåŠ¨è°ƒç”¨æ‰€æœ‰ DbContext çš„ `EnsureDatabaseMigrated()`ï¼Œæ— éœ€æ‰‹åŠ¨è¿ç§»ã€‚
+
+4. **ä½¿ç”¨ä»“å‚¨è¿›è¡Œæ•°æ®æ“ä½œ**
+```csharp
+var authorRepo = provider.GetRequiredService<AuthorRepository>();
+var bookRepo = provider.GetRequiredService<BookRepository>();
+
+// å¢åŠ æ•°æ®
+var author = new Author { Name = "å¼ ä¸‰" };
+var addAuthorResult = await authorRepo.AddAsync(author);
+
+var book = new Book { Title = "C# å…¥é—¨", AuthorId = author.Id };
+var addBookResult = await bookRepo.AddAsync(book);
+
+// æŸ¥è¯¢
+var authors = await authorRepo.GetAllAsync();
+
+// ä¿®æ”¹
+author.Name = "æå››";
+var updateAuthorResult = await authorRepo.UpdateAsync(author);
+
+// åˆ é™¤
+var deleteAuthorResult = await authorRepo.DeleteAsync(author.Id);
+```
+
+## ç»“æœç±»å‹è¯´æ˜
+
+- `FResult`ï¼šé€šç”¨æ“ä½œç»“æœï¼Œå«æˆåŠŸæ ‡å¿—ã€æ¶ˆæ¯ã€é”™è¯¯ç ç­‰ã€‚
+- `FResult<T>`ï¼šå¸¦æ•°æ®çš„æ“ä½œç»“æœã€‚
+- `FPagedResult<T>`ï¼šå¸¦åˆ†é¡µä¿¡æ¯çš„æ•°æ®ç»“æœã€‚
+
+æ‰€æœ‰ç»“æœç±»å‹å‡æ”¯æŒæ ¼å¼åŒ–æ¶ˆæ¯ã€é”™è¯¯ç ã€æ—¥å¿—è½¬æ¢ç­‰ã€‚
+
+---
+
+## è¿›é˜¶ç”¨æ³•
+- æ”¯æŒè‡ªå®šä¹‰ä»“å‚¨ã€DTO æ˜ å°„ã€å…¨å±€æŸ¥è¯¢è¿‡æ»¤ç­‰
+- æ”¯æŒæ‰¹é‡æ“ä½œã€è½¯åˆ é™¤ã€ä¹è§‚é”ç­‰
+- è¯¦è§æºç æ³¨é‡Šä¸å„ç±»æ‰©å±•æ–¹æ³•
+
+---
+
+## æµ‹è¯•ä¸ç¤ºä¾‹
+
+æœ¬ä»“åº“è‡ªå¸¦å®Œæ•´çš„æµ‹è¯•é¡¹ç›®ï¼ˆEFCoreLayerKitTestï¼‰ï¼Œå¯ç›´æ¥è¿è¡Œ `Program.cs` æŸ¥çœ‹å¢åˆ æ”¹æŸ¥ç­‰åŠŸèƒ½çš„å®é™…æ•ˆæœã€‚
+
+---
+
+## è®¸å¯è¯
 MIT
