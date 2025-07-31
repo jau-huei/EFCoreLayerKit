@@ -13,6 +13,10 @@ namespace EFCoreLayerKit.Attributes
         /// </summary>
         public Type EntityType { get; }
 
+        /// <summary>
+        /// 建立一个新的 DtoForEntityAttribute 实例。
+        /// </summary>
+        /// <param name="entityType">关联的实体类型。</param>
         public DtoForEntityAttribute(Type entityType)
         {
             EntityType = entityType;

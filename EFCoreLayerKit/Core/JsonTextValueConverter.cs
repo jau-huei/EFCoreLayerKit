@@ -9,6 +9,9 @@ namespace EFCoreLayerKit.Core
     /// <typeparam name="T">要转换的类型</typeparam>
     public class JsonTextValueConverter<T> : ValueConverter<T?, string?>
     {
+        /// <summary>
+        /// 建立一个新的 JsonTextValueConverter 实例。
+        /// </summary>
         public JsonTextValueConverter()
             : base(
                 v => v == null ? null : JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),

@@ -6,12 +6,12 @@ using EFCoreLayerKit.Entities;
 namespace EFCoreLayerKit.Core
 {
     /// <summary>
-    /// IQueryable<TEntity> 的扩展方法，支持根据 QueryOptions<TEntity> 应用导航属性包含、排序和查询过滤器控制。
+    /// IQueryable&lt;TEntity&gt; 的扩展方法，支持根据 QueryOptions&lt;TEntity&gt; 应用导航属性包含、排序和查询过滤器控制。
     /// </summary>
     public static class QueryableExtensions
     {
         /// <summary>
-        /// 根据 QueryOptions<TEntity> 配置对查询进行导航属性 Include、排序（支持多级）、忽略全局过滤器等操作。
+        /// 根据 QueryOptions&lt;TEntity&gt; 配置对查询进行导航属性 Include、排序（支持多级）、忽略全局过滤器等操作。
         /// </summary>
         /// <typeparam name="TEntity">实体类型，必须继承自 BaseEntity。</typeparam>
         /// <param name="query">要操作的 IQueryable 查询对象。</param>

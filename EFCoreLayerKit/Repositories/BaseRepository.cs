@@ -14,9 +14,20 @@ namespace EFCoreLayerKit.Repositories
     /// <typeparam name="TEntity">实体类型，必须继承自 BaseEntity</typeparam>
     public abstract class BaseRepository<TEntity> where TEntity : BaseEntity
     {
+        /// <summary>
+        /// 数据库上下文。
+        /// </summary>
         protected readonly BaseDbContext _context;
+
+        /// <summary>
+        /// 数据库实体集。
+        /// </summary>
         protected readonly DbSet<TEntity> _dbSet;
 
+        /// <summary>
+        /// 建立 BaseRepository 的实例。
+        /// </summary>
+        /// <param name="context">数据库上下文实例。</param>
         protected BaseRepository(BaseDbContext context)
         {
             _context = context;
@@ -86,6 +97,34 @@ namespace EFCoreLayerKit.Repositories
             catch (Exception ex)
             {
                 return FResult<List<TEntity>>.Fail("An exception occurred while querying entities: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 根据条件表达式查询第一个实体。
+        /// </summary>
+        /// <param name="predicate">查询条件表达式。</param>
+        /// <param name="options">可选查询规则。</param>
+        /// <returns>包含操作结果和实体数据的 FResult 对象。</returns>
+        public virtual async Task<FResult<TEntity>> FindFirstAsync(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate, QueryOptions<TEntity>? options = null)
+        {
+            try
+            {
+                var query = _dbSet.AsNoTracking().Where(predicate);
+                query = query.ApplyQueryOption(options);
+                var entity = await query.FirstOrDefaultAsync();
+                if (entity != null)
+                {
+                    return FResult<TEntity>.Ok(entity, "Entity found successfully.");
+                }
+                else
+                {
+                    return FResult<TEntity>.Fail("Entity not found by the given condition.", ErrorCode.NotFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                return FResult<TEntity>.Fail("An exception occurred while querying the entity: {0}", ErrorCode.Exception, ex, ex.Message);
             }
         }
 
@@ -305,6 +344,33 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
+        /// 恢复软删除实体（将 IsDeleted 设为 false，仅当实体有 IsDeleted 属性时有效）。
+        /// </summary>
+        /// <param name="id">要恢复的实体主键 Id。</param>
+        /// <returns>包含操作结果的 FResult 对象。</returns>
+        public virtual async Task<FResult> RestoreAsync(long id)
+        {
+            try
+            {
+                var entity = await _dbSet.FindAsync(id);
+                if (entity == null)
+                    return FResult.Fail("Entity to restore was not found.", ErrorCode.NotFound, id);
+
+                var prop = typeof(TEntity).GetProperty("IsDeleted");
+                if (prop == null || prop.PropertyType != typeof(bool))
+                    return FResult.Fail("Entity does not support restore (missing IsDeleted property).", ErrorCode.OperationFailed, id);
+
+                prop.SetValue(entity, false);
+                await _context.SaveChangesAsync();
+                return FResult.Ok("Entity restored successfully.");
+            }
+            catch (Exception ex)
+            {
+                return FResult.Fail("Exception occurred while restoring entity: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 批量新增实体（使用事务）。
         /// </summary>
         /// <param name="entities">要新增的实体集合。</param>
@@ -391,6 +457,39 @@ namespace EFCoreLayerKit.Repositories
             {
                 await transaction.RollbackAsync();
                 return FResult.Fail("Exception occurred during batch soft delete: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 批量恢复软删除实体（将 IsDeleted 设为 false，仅当实体有 IsDeleted 属性时有效，使用事务）。
+        /// </summary>
+        /// <param name="ids">要恢复的实体主键集合。</param>
+        /// <returns>包含操作结果的 FResult 对象。</returns>
+        public virtual async Task<FResult> BatchRestoreAsync(IEnumerable<long> ids)
+        {
+            if (ids == null || !ids.Any())
+                return FResult.Fail("Ids collection cannot be null or empty.", ErrorCode.InvalidParameter);
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var entities = await _dbSet.Where(e => ids.Contains(e.Id)).ToListAsync();
+                if (entities.Count != ids.Count())
+                    return FResult.Fail("Some entities to restore were not found.", ErrorCode.NotFound);
+                var prop = typeof(TEntity).GetProperty("IsDeleted");
+                if (prop == null || prop.PropertyType != typeof(bool))
+                    return FResult.Fail("Entity does not support restore (missing IsDeleted property).", ErrorCode.OperationFailed);
+                foreach (var entity in entities)
+                {
+                    prop.SetValue(entity, false);
+                }
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return FResult.Ok("Batch restore successful.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return FResult.Fail("Exception occurred during batch restore: {0}", ErrorCode.Exception, ex, ex.Message);
             }
         }
     }
