@@ -1,8 +1,7 @@
 using EFCoreLayerKit.Data;
 using EFCoreLayerKit.Repositories;
-using Microsoft.EntityFrameworkCore;
+using EFCoreLayerKit.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.CompilerServices;
 
 namespace EFCoreLayerKit.Core
 {
@@ -56,20 +55,28 @@ namespace EFCoreLayerKit.Core
         }
 
         /// <summary>
-        /// 自动注册所有 BaseDbContext 及 BaseRepository 派生类到依赖注入容器，并自动迁移所有数据库结构。
+        /// 扩展 IServiceCollection，自动注册所有 BaseDbContext、BaseRepository 及 BaseService 的派生类到依赖注入容器，
+        /// 并递归注册其所有抽象基类，支持跨程序集自动发现。注册生命周期为 Scoped。
+        /// 同时自动注册 AutoMapper 配置，并在启动时自动迁移所有数据库结构（调用 EnsureDatabaseMigrated）。
         /// </summary>
         /// <param name="services">服务集合</param>
-        /// <returns>服务集合</returns>
+        /// <returns>服务集合本身，便于链式调用</returns>
         public static IServiceCollection AddEFCoreLayerKit(this IServiceCollection services)
         {
             // 获取所有已加载的程序集（包括主程序和测试/外部程序集）
             var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            // 注册 AutoMapper 配置
+            services.AddAutoMapper(allAssemblies);
 
             // 注册所有 BaseDbContext 派生类（包括外部程序集）
             services.RegisterAllDerivedTypes<BaseDbContext>();
 
             // 注册所有 BaseRepository<> 派生类（包括外部程序集），并递归注册其所有抽象基类
             services.RegisterAllDerivedTypes(typeof(BaseRepository<>));
+
+            // 注册所有 BaseService 派生类（包括外部程序集），并递归注册其所有抽象基类
+            services.RegisterAllDerivedTypes<BaseService>();
 
             // 自动迁移所有 DbContext
             using (var provider = services.BuildServiceProvider())

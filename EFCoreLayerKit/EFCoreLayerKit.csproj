@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageId>EFCoreLayerKit</PackageId>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<Authors>Wood</Authors>
 		<Description>基于 Entity Framework Core 的通用数据访问层工具包，支持自动仓储注册、DTO 映射、软删除、自动迁移等，适用于 .NET 8+ 项目。</Description>
 		<PackageTags>EFCore;repository;data-access;DTO;automapper;soft-delete;migration;sqlite;dotnet8</PackageTags>
@@ -24,11 +24,10 @@
 
 	<ItemGroup>
 		<Folder Include="Controllers\" />
-		<Folder Include="Services\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="15.0.1" />
+		<PackageReference Include="AutoMapper" Version="14.0.0" />
 		<PackageReference Include="FormatLog" Version="1.0.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.7" />
