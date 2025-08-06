@@ -3,12 +3,12 @@ namespace EFCoreLayerKit.QueryModels
     /// <summary>
     /// 字段的单个逻辑条件。
     /// </summary>
-    public class FieldLogic
+    public class Rule
     {
         /// <summary>
-        /// 逻辑关系类型。
+        /// 操作类型。
         /// </summary>
-        public LogicType Logic { get; set; }
+        public Operator Operator { get; set; }
 
         /// <summary>
         /// 查询值1（如等于、包含、开头为、结尾为、介于的起始值）。
@@ -21,8 +21,8 @@ namespace EFCoreLayerKit.QueryModels
         public string Value2 { get; set; } = "";
 
         /// <summary>
-        /// 字段内多个逻辑关系的 AND/OR。
+        /// 字段内多个连接关系的 AND/OR。
         /// </summary>
-        public AndOrType AndOr { get; set; } = AndOrType.And;
+        public JoinType AndOr { get; set; } = JoinType.And;
     }
 }

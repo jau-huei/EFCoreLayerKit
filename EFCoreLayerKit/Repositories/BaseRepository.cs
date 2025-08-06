@@ -189,53 +189,53 @@ namespace EFCoreLayerKit.Repositories
                     foreach (var condition in query.Conditions)
                     {
                         var field = condition.Field;
-                        foreach (var logic in condition.Logics)
+                        foreach (var logic in condition.Rules)
                         {
                             var andOr = logic.AndOr;
-                            var type = logic.Logic;
+                            var type = logic.Operator;
 
                             switch (type)
                             {
-                                case LogicType.Equals:
+                                case Operator.Equals:
                                     dbQuery = dbQuery.Where($"{field} == @0", logic.Value);
                                     break;
-                                case LogicType.Contains:
+                                case Operator.Contains:
                                     dbQuery = dbQuery.Where($"{field}.Contains(@0)", logic.Value);
                                     break;
-                                case LogicType.StartsWith:
+                                case Operator.StartsWith:
                                     dbQuery = dbQuery.Where($"{field}.StartsWith(@0)", logic.Value);
                                     break;
-                                case LogicType.EndsWith:
+                                case Operator.EndsWith:
                                     dbQuery = dbQuery.Where($"{field}.EndsWith(@0)", logic.Value);
                                     break;
-                                case LogicType.GreaterThan:
+                                case Operator.GreaterThan:
                                     dbQuery = dbQuery.Where($"{field} > @0", logic.Value);
                                     break;
-                                case LogicType.LessThan:
+                                case Operator.LessThan:
                                     dbQuery = dbQuery.Where($"{field} < @0", logic.Value);
                                     break;
-                                case LogicType.GreaterThanOrEquals:
+                                case Operator.GreaterThanOrEquals:
                                     dbQuery = dbQuery.Where($"{field} >= @0", logic.Value);
                                     break;
-                                case LogicType.LessThanOrEquals:
+                                case Operator.LessThanOrEquals:
                                     dbQuery = dbQuery.Where($"{field} <= @0", logic.Value);
                                     break;
-                                case LogicType.NotEquals:
+                                case Operator.NotEquals:
                                     dbQuery = dbQuery.Where($"{field} != @0", logic.Value);
                                     break;
-                                case LogicType.IsNull:
+                                case Operator.IsNull:
                                     dbQuery = dbQuery.Where($"{field} == null");
                                     break;
-                                case LogicType.IsNotNull:
+                                case Operator.IsNotNull:
                                     dbQuery = dbQuery.Where($"{field} != null");
                                     break;
-                                case LogicType.NotContains:
+                                case Operator.NotContains:
                                     dbQuery = dbQuery.Where($"!{field}.Contains(@0)", logic.Value);
                                     break;
-                                case LogicType.TheSameDateWith:
+                                case Operator.TheSameDateWith:
                                     dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(logic.Value));
                                     break;
-                                case LogicType.Between:
+                                case Operator.Between:
                                     dbQuery = dbQuery.Where($"{field} >= @0 && {field} <= @1", logic.Value, logic.Value2);
                                     break;
                             }

@@ -11,8 +11,8 @@ namespace EFCoreLayerKit.QueryModels
         public string Field { get; set; } = "";
 
         /// <summary>
-        /// 该字段的多个逻辑条件（同字段内可为 AND/OR）。
+        /// 该字段的多个规则（同字段内可为 AND/OR）。
         /// </summary>
-        public List<FieldLogic> Logics { get; set; } = new List<FieldLogic>();
+        public List<Rule> Rules { get; set; } = new List<Rule>();
     }
 }
