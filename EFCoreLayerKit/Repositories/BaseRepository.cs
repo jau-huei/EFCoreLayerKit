@@ -165,6 +165,96 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
+        /// 分页查询实体列表，支持动态条件过滤与排序。
+        /// </summary>
+        /// <param name="query">分页查询参数，包含页码、每页数量及查询条件集合。</param>
+        /// <param name="options">可选的查询规则（如导航属性包含、排序、是否忽略全局过滤器等）。</param>
+        /// <returns>包含分页数据、总记录数及分页信息的 <see cref="FPagedResult{TEntity}"/> 结果对象。</returns>
+        public virtual async Task<FPagedResult<TEntity>> GetPagedAsync(PagedQueryInput query, QueryOptions<TEntity>? options = null)
+        {
+            try
+            {
+                var pageIndex = query.PageIndex < 1 ? 1 : query.PageIndex;
+                var pageSize = query.PageSize < 1 ? 10 : query.PageSize;
+
+                // 基础查询
+                var dbQuery = _dbSet.AsNoTracking().AsQueryable();
+
+                // 应用 QueryOptions（包含导航、排序、过滤器等）
+                dbQuery = dbQuery.ApplyQueryOption(options);
+
+                // 动态拼接条件
+                if (query.Conditions != null && query.Conditions.Count > 0)
+                {
+                    foreach (var condition in query.Conditions)
+                    {
+                        var field = condition.Field;
+                        foreach (var logic in condition.Logics)
+                        {
+                            var andOr = logic.AndOr;
+                            var type = logic.Logic;
+
+                            switch (type)
+                            {
+                                case LogicType.Equals:
+                                    dbQuery = dbQuery.Where($"{field} == @0", logic.Value);
+                                    break;
+                                case LogicType.Contains:
+                                    dbQuery = dbQuery.Where($"{field}.Contains(@0)", logic.Value);
+                                    break;
+                                case LogicType.StartsWith:
+                                    dbQuery = dbQuery.Where($"{field}.StartsWith(@0)", logic.Value);
+                                    break;
+                                case LogicType.EndsWith:
+                                    dbQuery = dbQuery.Where($"{field}.EndsWith(@0)", logic.Value);
+                                    break;
+                                case LogicType.GreaterThan:
+                                    dbQuery = dbQuery.Where($"{field} > @0", logic.Value);
+                                    break;
+                                case LogicType.LessThan:
+                                    dbQuery = dbQuery.Where($"{field} < @0", logic.Value);
+                                    break;
+                                case LogicType.GreaterThanOrEquals:
+                                    dbQuery = dbQuery.Where($"{field} >= @0", logic.Value);
+                                    break;
+                                case LogicType.LessThanOrEquals:
+                                    dbQuery = dbQuery.Where($"{field} <= @0", logic.Value);
+                                    break;
+                                case LogicType.NotEquals:
+                                    dbQuery = dbQuery.Where($"{field} != @0", logic.Value);
+                                    break;
+                                case LogicType.IsNull:
+                                    dbQuery = dbQuery.Where($"{field} == null");
+                                    break;
+                                case LogicType.IsNotNull:
+                                    dbQuery = dbQuery.Where($"{field} != null");
+                                    break;
+                                case LogicType.NotContains:
+                                    dbQuery = dbQuery.Where($"!{field}.Contains(@0)", logic.Value);
+                                    break;
+                                case LogicType.TheSameDateWith:
+                                    dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(logic.Value));
+                                    break;
+                                case LogicType.Between:
+                                    dbQuery = dbQuery.Where($"{field} >= @0 && {field} <= @1", logic.Value, logic.Value2);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                var total = await dbQuery.CountAsync();
+                var data = await dbQuery.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+                return FPagedResult<TEntity>.Ok(data, total, pageIndex, pageSize, "Paged entities fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return FPagedResult<TEntity>.Fail("An exception occurred while paged querying: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 分页查询实体列表（支持排序）。
         /// </summary>
         /// <param name="predicate">查询条件表达式。</param>

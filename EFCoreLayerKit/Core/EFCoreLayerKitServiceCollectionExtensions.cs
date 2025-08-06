@@ -29,7 +29,7 @@ namespace EFCoreLayerKit.Core
                 var baseType = serviceType.BaseType;
 
                 // 遍历每个基类，直到找到 type
-                while (baseType != null && baseType != typeof(object))
+                while (baseType != null && baseType != typeof(object) && baseType != type)
                 {
                     // 检查基类是否为抽象类，如果是，注册其与子类的关系
                     if (baseType.IsAbstract)

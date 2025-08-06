@@ -2,6 +2,7 @@ using EFCoreLayerKit.Attributes;
 using EFCoreLayerKit.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,13 @@ namespace EFCoreLayerKit.Data
             var dir = Path.Combine(Directory.GetCurrentDirectory(), "DB");
             Directory.CreateDirectory(dir);
             return dir;
+        }
+
+        /// <summary>
+        /// 初始化 <see cref="BaseDbContext"/> 类的新实例。
+        /// </summary>
+        public BaseDbContext()
+        {
         }
 
         /// <summary>
