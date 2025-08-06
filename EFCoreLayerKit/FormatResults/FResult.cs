@@ -33,6 +33,41 @@
         /// <returns>失败的Result对象。</returns>
         public static FResult Fail(string? messageFormat = null, ErrorCode code = ErrorCode.Unknown, params object?[] messageArgs)
             => new FResult { Success = false, MessageFormat = messageFormat, MessageArgs = messageArgs, Code = (int)code };
+
+        /// <summary>
+        /// 将当前 FResult 转换为 FResult&lt;T&gt;，Data 默认为 default(T)。
+        /// </summary>
+        public FResult<T> AsResult<T>()
+        {
+            return new FResult<T>()
+            {
+                Success = Success,
+                Code = Code,
+                CreatedAt = CreatedAt,
+                MessageFormat = MessageFormat,
+                MessageArgs = MessageArgs,
+                Data = default(T)
+            };
+        }
+
+        /// <summary>
+        /// 将当前 FResult 转换为带数据的 FResult&lt;T&gt;，并指定 Data。
+        /// </summary>
+        /// <typeparam name="T">数据类型</typeparam>
+        /// <param name="data">要附加的数据</param>
+        /// <returns>带数据的 FResult&lt;T&gt; 实例</returns>
+        public FResult<T> AsResult<T>(T? data)
+        {
+            return new FResult<T>()
+            {
+                Success = Success,
+                Code = Code,
+                CreatedAt = CreatedAt,
+                MessageFormat = MessageFormat,
+                MessageArgs = MessageArgs,
+                Data = data
+            };
+        }
     }
 
     /// <summary>
@@ -81,5 +116,43 @@
         /// </summary>
         /// <param name="value">要包装的数据。</param>
         public static implicit operator FResult<T>(T value) => Ok(value);
+
+        /// <summary>
+        /// 将当前结果转换为另一种数据类型的结果，保留原有状态和消息，仅替换数据内容。
+        /// </summary>
+        /// <typeparam name="U">目标数据类型。</typeparam>
+        /// <param name="data">要设置的新数据。</param>
+        /// <returns>包含新数据类型的 <see cref="FResult{U}"/> 实例。</returns>
+        public FResult<U> AsResult<U>(U? data)
+        {
+            return new FResult<U>()
+            {
+                Success = Success,
+                Code = Code,
+                CreatedAt = CreatedAt,
+                MessageFormat = MessageFormat,
+                MessageArgs = MessageArgs,
+                Data = data
+            };
+        }
+
+        /// <summary>
+        /// 使用指定转换函数将当前结果的数据转换为另一种类型，生成新的结果对象，保留原有状态和消息。
+        /// </summary>
+        /// <typeparam name="U">目标数据类型。</typeparam>
+        /// <param name="converter">用于将数据从 T 转换为 U 的转换函数。</param>
+        /// <returns>包含转换后数据类型的 <see cref="FResult{U}"/> 实例。</returns>
+        public FResult<U> AsResult<U>(Func<T?, U> converter)
+        {
+            return new FResult<U>()
+            {
+                Success = Success,
+                Code = Code,
+                CreatedAt = CreatedAt,
+                MessageFormat = MessageFormat,
+                MessageArgs = MessageArgs,
+                Data = converter(Data)
+            };
+        }
     }
 }

@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageId>EFCoreLayerKit</PackageId>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<Authors>Wood</Authors>
 		<Description>基于 Entity Framework Core 的通用数据访问层工具包，支持自动仓储注册、DTO 映射、软删除、自动迁移等，适用于 .NET 8+ 项目。</Description>
 		<PackageTags>EFCore;repository;data-access;DTO;automapper;soft-delete;migration;sqlite;dotnet8</PackageTags>
