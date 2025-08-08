@@ -132,5 +132,21 @@
                 PageSize = this.PageSize
             };
         }
+
+        /// <summary>
+        /// 将当前 FResult&lt;T&gt; 转换为不带数据的 FResult，保留原有状态和消息。
+        /// </summary>
+        /// <returns>不带数据的 FResult 实例。</returns>
+        public FResult AsResult()
+        {
+            return new FResult()
+            {
+                Success = Success,
+                Code = Code,
+                CreatedAt = CreatedAt,
+                MessageFormat = MessageFormat,
+                MessageArgs = MessageArgs
+            };
+        }
     }
 }
