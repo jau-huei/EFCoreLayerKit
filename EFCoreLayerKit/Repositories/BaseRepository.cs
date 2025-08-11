@@ -192,39 +192,39 @@ namespace EFCoreLayerKit.Repositories
                         var property = typeof(TEntity).GetProperty(field);
                         if (property == null) continue;
 
-                        foreach (var logic in condition.Rules)
+                        foreach (var rule in condition.Rules)
                         {
-                            var andOr = logic.AndOr;
-                            var type = logic.Operator;
+                            var andOr = rule.AndOr;
+                            var type = rule.Operator;
 
                             switch (type)
                             {
                                 case Operator.Equals:
-                                    dbQuery = dbQuery.Where($"{field} == @0", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field} == @0", rule.Value);
                                     break;
                                 case Operator.Contains:
-                                    dbQuery = dbQuery.Where($"{field}.Contains(@0)", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field}.Contains(@0)", rule.Value);
                                     break;
                                 case Operator.StartsWith:
-                                    dbQuery = dbQuery.Where($"{field}.StartsWith(@0)", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field}.StartsWith(@0)", rule.Value);
                                     break;
                                 case Operator.EndsWith:
-                                    dbQuery = dbQuery.Where($"{field}.EndsWith(@0)", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field}.EndsWith(@0)", rule.Value);
                                     break;
                                 case Operator.GreaterThan:
-                                    dbQuery = dbQuery.Where($"{field} > @0", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field} > @0", rule.Value);
                                     break;
                                 case Operator.LessThan:
-                                    dbQuery = dbQuery.Where($"{field} < @0", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field} < @0", rule.Value);
                                     break;
                                 case Operator.GreaterThanOrEquals:
-                                    dbQuery = dbQuery.Where($"{field} >= @0", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field} >= @0", rule.Value);
                                     break;
                                 case Operator.LessThanOrEquals:
-                                    dbQuery = dbQuery.Where($"{field} <= @0", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field} <= @0", rule.Value);
                                     break;
                                 case Operator.NotEquals:
-                                    dbQuery = dbQuery.Where($"{field} != @0", logic.Value);
+                                    dbQuery = dbQuery.Where($"{field} != @0", rule.Value);
                                     break;
                                 case Operator.IsNull:
                                     dbQuery = dbQuery.Where($"{field} == null");
@@ -233,18 +233,18 @@ namespace EFCoreLayerKit.Repositories
                                     dbQuery = dbQuery.Where($"{field} != null");
                                     break;
                                 case Operator.NotContains:
-                                    dbQuery = dbQuery.Where($"!{field}.Contains(@0)", logic.Value);
+                                    dbQuery = dbQuery.Where($"!{field}.Contains(@0)", rule.Value);
                                     break;
                                 case Operator.TheSameDateWith:
                                     {
                                         if (property.PropertyType == typeof(DateTime?))
-                                            dbQuery = dbQuery.Where($"{field}.Value.Date == @0.Date", DateTime.Parse(logic.Value));
+                                            dbQuery = dbQuery.Where($"{field}.Value.Date == @0.Date", DateTime.Parse(rule.Value));
                                         else if (property.PropertyType == typeof(DateTime))
-                                            dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(logic.Value));
+                                            dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(rule.Value));
                                     }
                                     break;
                                 case Operator.Between:
-                                    dbQuery = dbQuery.Where($"{field} >= @0 && {field} <= @1", logic.Value, logic.Value2);
+                                    dbQuery = dbQuery.Where($"{field} >= @0 && {field} <= @1", rule.Value, rule.Value2);
                                     break;
                             }
                         }
