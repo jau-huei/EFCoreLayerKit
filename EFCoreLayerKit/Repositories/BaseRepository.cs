@@ -189,6 +189,9 @@ namespace EFCoreLayerKit.Repositories
                     foreach (var condition in query.Conditions)
                     {
                         var field = condition.Field;
+                        var property = typeof(TEntity).GetProperty(field);
+                        if (property == null) continue;
+
                         foreach (var logic in condition.Rules)
                         {
                             var andOr = logic.AndOr;
@@ -233,7 +236,12 @@ namespace EFCoreLayerKit.Repositories
                                     dbQuery = dbQuery.Where($"!{field}.Contains(@0)", logic.Value);
                                     break;
                                 case Operator.TheSameDateWith:
-                                    dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(logic.Value));
+                                    {
+                                        if (property.PropertyType == typeof(DateTime?))
+                                            dbQuery = dbQuery.Where($"{field}.Value.Date == @0.Date", DateTime.Parse(logic.Value));
+                                        else if (property.PropertyType == typeof(DateTime))
+                                            dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(logic.Value));
+                                    }
                                     break;
                                 case Operator.Between:
                                     dbQuery = dbQuery.Where($"{field} >= @0 && {field} <= @1", logic.Value, logic.Value2);
@@ -243,6 +251,7 @@ namespace EFCoreLayerKit.Repositories
                     }
                 }
 
+                var qString = dbQuery.ToQueryString();
                 var total = await dbQuery.CountAsync();
                 var data = await dbQuery.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
 
