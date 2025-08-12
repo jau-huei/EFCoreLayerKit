@@ -9,25 +9,25 @@ using System.Linq.Dynamic.Core;
 namespace EFCoreLayerKit.Repositories
 {
     /// <summary>
-    /// Í¨ÓÃÊµÌå²Ö´¢³éÏó»ùÀà£¬Ìá¹©»ù±¾µÄÔöÉ¾¸Ä²é²Ù×÷¡£
+    /// é€šç”¨å®ä½“ä»“å‚¨æŠ½è±¡åŸºç±»ï¼Œæä¾›åŸºæœ¬çš„å¢åˆ æ”¹æŸ¥æ“ä½œã€‚
     /// </summary>
-    /// <typeparam name="TEntity">ÊµÌåÀàĞÍ£¬±ØĞë¼Ì³Ğ×Ô BaseEntity</typeparam>
+    /// <typeparam name="TEntity">å®ä½“ç±»å‹ï¼Œå¿…é¡»ç»§æ‰¿è‡ª BaseEntity</typeparam>
     public abstract class BaseRepository<TEntity> where TEntity : BaseEntity
     {
         /// <summary>
-        /// Êı¾İ¿âÉÏÏÂÎÄ¡£
+        /// æ•°æ®åº“ä¸Šä¸‹æ–‡ã€‚
         /// </summary>
         protected readonly BaseDbContext _context;
 
         /// <summary>
-        /// Êı¾İ¿âÊµÌå¼¯¡£
+        /// æ•°æ®åº“å®ä½“é›†ã€‚
         /// </summary>
         protected readonly DbSet<TEntity> _dbSet;
 
         /// <summary>
-        /// ½¨Á¢ BaseRepository µÄÊµÀı¡£
+        /// å»ºç«‹ BaseRepository çš„å®ä¾‹ã€‚
         /// </summary>
-        /// <param name="context">Êı¾İ¿âÉÏÏÂÎÄÊµÀı¡£</param>
+        /// <param name="context">æ•°æ®åº“ä¸Šä¸‹æ–‡å®ä¾‹ã€‚</param>
         protected BaseRepository(BaseDbContext context)
         {
             _context = context;
@@ -35,10 +35,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ¸ù¾İÖ÷¼ü Id Òì²½»ñÈ¡ÊµÌå¡£
+        /// æ ¹æ®ä¸»é”® Id å¼‚æ­¥è·å–å®ä½“ã€‚
         /// </summary>
-        /// <param name="id">ÊµÌåÖ÷¼ü Id¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍÊµÌåÊı¾İµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="id">å®ä½“ä¸»é”® Idã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œå®ä½“æ•°æ®çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<TEntity>> GetByIdAsync(long id)
         {
             try
@@ -60,10 +60,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// »ñÈ¡ËùÓĞÊµÌåÁĞ±í¡£
+        /// è·å–æ‰€æœ‰å®ä½“åˆ—è¡¨ã€‚
         /// </summary>
-        /// <param name="options">¿ÉÑ¡²éÑ¯¹æÔò¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍÊµÌåÊı¾İÁĞ±íµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="options">å¯é€‰æŸ¥è¯¢è§„åˆ™ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œå®ä½“æ•°æ®åˆ—è¡¨çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<List<TEntity>>> GetAllAsync(QueryOptions<TEntity>? options = null)
         {
             try
@@ -80,11 +80,11 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ¸ù¾İÌõ¼ş±í´ïÊ½²éÑ¯ÊµÌåÁĞ±í¡£
+        /// æ ¹æ®æ¡ä»¶è¡¨è¾¾å¼æŸ¥è¯¢å®ä½“åˆ—è¡¨ã€‚
         /// </summary>
-        /// <param name="predicate">²éÑ¯Ìõ¼ş±í´ïÊ½¡£</param>
-        /// <param name="options">¿ÉÑ¡²éÑ¯¹æÔò¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍÊµÌåÊı¾İÁĞ±íµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="predicate">æŸ¥è¯¢æ¡ä»¶è¡¨è¾¾å¼ã€‚</param>
+        /// <param name="options">å¯é€‰æŸ¥è¯¢è§„åˆ™ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œå®ä½“æ•°æ®åˆ—è¡¨çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<List<TEntity>>> FindAsync(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate, QueryOptions<TEntity>? options = null)
         {
             try
@@ -101,11 +101,11 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ¸ù¾İÌõ¼ş±í´ïÊ½²éÑ¯µÚÒ»¸öÊµÌå¡£
+        /// æ ¹æ®æ¡ä»¶è¡¨è¾¾å¼æŸ¥è¯¢ç¬¬ä¸€ä¸ªå®ä½“ã€‚
         /// </summary>
-        /// <param name="predicate">²éÑ¯Ìõ¼ş±í´ïÊ½¡£</param>
-        /// <param name="options">¿ÉÑ¡²éÑ¯¹æÔò¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍÊµÌåÊı¾İµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="predicate">æŸ¥è¯¢æ¡ä»¶è¡¨è¾¾å¼ã€‚</param>
+        /// <param name="options">å¯é€‰æŸ¥è¯¢è§„åˆ™ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œå®ä½“æ•°æ®çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<TEntity>> FindFirstAsync(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate, QueryOptions<TEntity>? options = null)
         {
             try
@@ -129,10 +129,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ÅĞ¶ÏÊÇ·ñ´æÔÚÂú×ãÌõ¼şµÄÊµÌå¡£
+        /// åˆ¤æ–­æ˜¯å¦å­˜åœ¨æ»¡è¶³æ¡ä»¶çš„å®ä½“ã€‚
         /// </summary>
-        /// <param name="predicate">²éÑ¯Ìõ¼ş±í´ïÊ½¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍ²¼¶ûÖµµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="predicate">æŸ¥è¯¢æ¡ä»¶è¡¨è¾¾å¼ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œå¸ƒå°”å€¼çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<bool>> ExistsAsync(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate)
         {
             try
@@ -147,10 +147,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// »ñÈ¡Âú×ãÌõ¼şµÄÊµÌåÊıÁ¿¡£
+        /// è·å–æ»¡è¶³æ¡ä»¶çš„å®ä½“æ•°é‡ã€‚
         /// </summary>
-        /// <param name="predicate">²éÑ¯Ìõ¼ş±í´ïÊ½¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍÊıÁ¿µÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="predicate">æŸ¥è¯¢æ¡ä»¶è¡¨è¾¾å¼ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œæ•°é‡çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<int>> CountAsync(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate)
         {
             try
@@ -165,25 +165,19 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ·ÖÒ³²éÑ¯ÊµÌåÁĞ±í£¬Ö§³Ö¶¯Ì¬Ìõ¼ş¹ıÂËÓëÅÅĞò¡£
+        /// åˆ†é¡µæŸ¥è¯¢å®ä½“åˆ—è¡¨ï¼Œæ”¯æŒåŠ¨æ€æ¡ä»¶è¿‡æ»¤ä¸æ’åºã€‚
         /// </summary>
-        /// <param name="query">·ÖÒ³²éÑ¯²ÎÊı£¬°üº¬Ò³Âë¡¢Ã¿Ò³ÊıÁ¿¼°²éÑ¯Ìõ¼ş¼¯ºÏ¡£</param>
-        /// <param name="options">¿ÉÑ¡µÄ²éÑ¯¹æÔò£¨Èçµ¼º½ÊôĞÔ°üº¬¡¢ÅÅĞò¡¢ÊÇ·ñºöÂÔÈ«¾Ö¹ıÂËÆ÷µÈ£©¡£</param>
-        /// <returns>°üº¬·ÖÒ³Êı¾İ¡¢×Ü¼ÇÂ¼Êı¼°·ÖÒ³ĞÅÏ¢µÄ <see cref="FPagedResult{TEntity}"/> ½á¹û¶ÔÏó¡£</returns>
+        /// <param name="query">åˆ†é¡µæŸ¥è¯¢å‚æ•°ï¼ŒåŒ…å«é¡µç ã€æ¯é¡µæ•°é‡åŠæŸ¥è¯¢æ¡ä»¶é›†åˆã€‚</param>
+        /// <param name="options">å¯é€‰çš„æŸ¥è¯¢è§„åˆ™ï¼ˆå¦‚å¯¼èˆªå±æ€§åŒ…å«ã€æ’åºã€æ˜¯å¦å¿½ç•¥å…¨å±€è¿‡æ»¤å™¨ç­‰ï¼‰ã€‚</param>
+        /// <returns>åŒ…å«åˆ†é¡µæ•°æ®ã€æ€»è®°å½•æ•°åŠåˆ†é¡µä¿¡æ¯çš„ <see cref="FPagedResult{TEntity}"/> ç»“æœå¯¹è±¡ã€‚</returns>
         public virtual async Task<FPagedResult<TEntity>> GetPagedAsync(PagedQueryInput query, QueryOptions<TEntity>? options = null)
         {
             try
             {
                 var pageIndex = query.PageIndex < 1 ? 1 : query.PageIndex;
                 var pageSize = query.PageSize < 1 ? 10 : query.PageSize;
-
-                // »ù´¡²éÑ¯
                 var dbQuery = _dbSet.AsNoTracking().AsQueryable();
-
-                // Ó¦ÓÃ QueryOptions£¨°üº¬µ¼º½¡¢ÅÅĞò¡¢¹ıÂËÆ÷µÈ£©
                 dbQuery = dbQuery.ApplyQueryOption(options);
-
-                // ¶¯Ì¬Æ´½ÓÌõ¼ş
                 if (query.Conditions != null && query.Conditions.Count > 0)
                 {
                     foreach (var condition in query.Conditions)
@@ -191,12 +185,9 @@ namespace EFCoreLayerKit.Repositories
                         var field = condition.Field;
                         var property = typeof(TEntity).GetProperty(field);
                         if (property == null) continue;
-
                         foreach (var rule in condition.Rules)
                         {
-                            var andOr = rule.AndOr;
                             var type = rule.Operator;
-
                             switch (type)
                             {
                                 case Operator.Equals:
@@ -236,12 +227,10 @@ namespace EFCoreLayerKit.Repositories
                                     dbQuery = dbQuery.Where($"!{field}.Contains(@0)", rule.Value);
                                     break;
                                 case Operator.TheSameDateWith:
-                                    {
-                                        if (property.PropertyType == typeof(DateTime?))
-                                            dbQuery = dbQuery.Where($"{field}.Value.Date == @0.Date", DateTime.Parse(rule.Value));
-                                        else if (property.PropertyType == typeof(DateTime))
-                                            dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(rule.Value));
-                                    }
+                                    if (property.PropertyType == typeof(DateTime?))
+                                        dbQuery = dbQuery.Where($"{field}.Value.Date == @0.Date", DateTime.Parse(rule.Value));
+                                    else if (property.PropertyType == typeof(DateTime))
+                                        dbQuery = dbQuery.Where($"{field}.Date == @0.Date", DateTime.Parse(rule.Value));
                                     break;
                                 case Operator.Between:
                                     dbQuery = dbQuery.Where($"{field} >= @0 && {field} <= @1", rule.Value, rule.Value2);
@@ -250,11 +239,8 @@ namespace EFCoreLayerKit.Repositories
                         }
                     }
                 }
-
-                var qString = dbQuery.ToQueryString();
                 var total = await dbQuery.CountAsync();
                 var data = await dbQuery.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-
                 return FPagedResult<TEntity>.Ok(data, total, pageIndex, pageSize, "Paged entities fetched successfully.");
             }
             catch (Exception ex)
@@ -264,13 +250,13 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ·ÖÒ³²éÑ¯ÊµÌåÁĞ±í£¨Ö§³ÖÅÅĞò£©¡£
+        /// åˆ†é¡µæŸ¥è¯¢å®ä½“åˆ—è¡¨ï¼ˆæ”¯æŒæ’åºï¼‰ã€‚
         /// </summary>
-        /// <param name="predicate">²éÑ¯Ìõ¼ş±í´ïÊ½¡£</param>
-        /// <param name="pageIndex">µ±Ç°Ò³Âë£¨´Ó1¿ªÊ¼£©¡£</param>
-        /// <param name="pageSize">Ã¿Ò³ÊıÁ¿¡£</param>
-        /// <param name="options">¿ÉÑ¡²éÑ¯¹æÔò¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍ·ÖÒ³Êı¾İµÄ FPagedResult ¶ÔÏó¡£</returns>
+        /// <param name="predicate">æŸ¥è¯¢æ¡ä»¶è¡¨è¾¾å¼ã€‚</param>
+        /// <param name="pageIndex">å½“å‰é¡µç ï¼ˆä»1å¼€å§‹ï¼‰ã€‚</param>
+        /// <param name="pageSize">æ¯é¡µæ•°é‡ã€‚</param>
+        /// <param name="options">å¯é€‰æŸ¥è¯¢è§„åˆ™ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œåˆ†é¡µæ•°æ®çš„ FPagedResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FPagedResult<TEntity>> GetPagedAsync(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate, int pageIndex, int pageSize, QueryOptions<TEntity>? options = null)
         {
             try
@@ -288,19 +274,19 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// Òì²½¸üĞÂÊµÌå¡£
-        /// <para>×¢Òâ£º</para>
+        /// å¼‚æ­¥æ›´æ–°å®ä½“ã€‚
+        /// <para>æ³¨æ„ï¼š</para>
         /// <list type="bullet">
-        /// <item>ÈôÊµÌå¼Ì³Ğ UpdatableEntity£¬Ôò½øĞĞÀÖ¹ÛËøĞ£Ñé£¨»ùÓÚ UpdatedAt ×Ö¶Î£©¡£</item>
-        /// <item>ÀÖ¹ÛËøĞ£ÑéÍ¨¹ıºó£¬×Ô¶¯½« UpdatedAt ÉèÖÃÎªµ±Ç°Ê±¼ä¡£</item>
-        /// <item>½ö¸üĞÂÖ÷ÊµÌå±í×Ö¶Î£¬²»»á×Ô¶¯¼¶Áª¸üĞÂµ¼º½ÊôĞÔ£¨Èç¼¯ºÏ/ÒıÓÃµÄ×Ó±íÊı¾İ£©¡£</item>
-        /// <item>ÈçĞè¸üĞÂµ¼º½ÊôĞÔ£¨Èç×Ó±í£©£¬ÇëÔÚÒµÎñ²ã×ÔĞĞ´¦ÀíÏà¹ØÊµÌåµÄ×´Ì¬ºÍ SaveChanges¡£</item>
-        /// <item>½ö BaseEntity Ê±£¬Ö±½Ó¸ù¾İ Id È«Á¿¸üĞÂÖ÷±í×Ö¶Î¡£</item>
-        /// <item>¸üĞÂ³É¹¦·µ»Ø×îĞÂÊµÌå£¬Èô°æ±¾³åÍ»Ôò·µ»Ø´íÎó¡£</item>
+        /// <item>è‹¥å®ä½“ç»§æ‰¿ UpdatableEntityï¼Œåˆ™è¿›è¡Œä¹è§‚é”æ ¡éªŒï¼ˆåŸºäº UpdatedAt å­—æ®µï¼‰ã€‚</item>
+        /// <item>ä¹è§‚é”æ ¡éªŒé€šè¿‡åï¼Œè‡ªåŠ¨å°† UpdatedAt è®¾ç½®ä¸ºå½“å‰æ—¶é—´ã€‚</item>
+        /// <item>ä»…æ›´æ–°ä¸»å®ä½“è¡¨å­—æ®µï¼Œä¸ä¼šè‡ªåŠ¨çº§è”æ›´æ–°å¯¼èˆªå±æ€§ï¼ˆå¦‚é›†åˆ/å¼•ç”¨çš„å­è¡¨æ•°æ®ï¼‰ã€‚</item>
+        /// <item>å¦‚éœ€æ›´æ–°å¯¼èˆªå±æ€§ï¼ˆå¦‚å­è¡¨ï¼‰ï¼Œè¯·åœ¨ä¸šåŠ¡å±‚è‡ªè¡Œå¤„ç†ç›¸å…³å®ä½“çš„çŠ¶æ€å’Œ SaveChangesã€‚</item>
+        /// <item>ä»… BaseEntity æ—¶ï¼Œç›´æ¥æ ¹æ® Id å…¨é‡æ›´æ–°ä¸»è¡¨å­—æ®µã€‚</item>
+        /// <item>æ›´æ–°æˆåŠŸè¿”å›æœ€æ–°å®ä½“ï¼Œè‹¥ç‰ˆæœ¬å†²çªåˆ™è¿”å›é”™è¯¯ã€‚</item>
         /// </list>
         /// </summary>
-        /// <param name="entity">Òª¸üĞÂµÄÊµÌå¶ÔÏó¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍ×îĞÂÊµÌåÊı¾İµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="entity">è¦æ›´æ–°çš„å®ä½“å¯¹è±¡ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œæœ€æ–°å®ä½“æ•°æ®çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<TEntity>> UpdateAsync(TEntity entity)
         {
             try
@@ -308,38 +294,43 @@ namespace EFCoreLayerKit.Repositories
                 if (entity == null)
                     return FResult<TEntity>.Fail("Entity cannot be null.", ErrorCode.InvalidParameter);
 
-                // ÅĞ¶ÏÊÇ·ñÎª UpdatableEntity
+                var trackedEntry = _context.ChangeTracker.Entries<TEntity>().FirstOrDefault(e => e.Entity.Id == entity.Id);
+
                 if (entity is UpdatableEntity updatable)
                 {
-                    // ²éÕÒÊı¾İ¿âÖĞµÄÔ­Ê¼ÊµÌå
-                    var dbEntity = await _dbSet.FirstOrDefaultAsync(e => e.Id == entity.Id);
-                    if (dbEntity == null)
-                        return FResult<TEntity>.Fail("Entity to update was not found.", ErrorCode.NotFound, entity.Id);
-
-                    // ¼ì²é UpdatedAt ÊÇ·ñÒ»ÖÂ
-                    var dbUpdatedAt = (dbEntity as UpdatableEntity)?.UpdatedAt;
-                    if (dbUpdatedAt == null || dbUpdatedAt != updatable.UpdatedAt)
+                    UpdatableEntity target;
+                    if (trackedEntry != null)
+                    {
+                        target = (trackedEntry.Entity as UpdatableEntity)!;
+                    }
+                    else
+                    {
+                        var dbEntity = await _dbSet.FirstOrDefaultAsync(e => e.Id == entity.Id);
+                        if (dbEntity == null)
+                            return FResult<TEntity>.Fail("Entity to update was not found.", ErrorCode.NotFound, entity.Id);
+                        target = (dbEntity as UpdatableEntity)!; // dbEntity å·²è¢«è·Ÿè¸ª
+                        trackedEntry = _context.Entry(dbEntity);
+                    }
+                    if (target.UpdatedAt != updatable.UpdatedAt)
                         return FResult<TEntity>.Fail("Entity has been modified by others. Please refresh and try again.", ErrorCode.Conflict, entity.Id);
-
-                    // ¸üĞÂÊ±¼ä
-                    updatable.UpdatedAt = DateTime.Now;
-
-                    // ¸üĞÂËùÓĞÊôĞÔ
-                    _context.Entry(dbEntity).CurrentValues.SetValues(entity);
-
-                    // ±£Ö¤ UpdatedAt ÊÇ×îĞÂ
-                    (dbEntity as UpdatableEntity)!.UpdatedAt = updatable.UpdatedAt;
+                    var now = DateTime.UtcNow;
+                    trackedEntry!.CurrentValues.SetValues(entity);
+                    target.UpdatedAt = now;
                 }
                 else
                 {
-                    // ½ö BaseEntity£¬Ö±½Ó¸üĞÂ
-                    _dbSet.Attach(entity);
-                    _context.Entry(entity).State = EntityState.Modified;
+                    if (trackedEntry != null)
+                    {
+                        trackedEntry.CurrentValues.SetValues(entity);
+                        trackedEntry.State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        _dbSet.Attach(entity);
+                        _context.Entry(entity).State = EntityState.Modified;
+                    }
                 }
-
                 await _context.SaveChangesAsync();
-
-                // ·µ»Ø×îĞÂÊµÌå
                 return await GetByIdAsync(entity.Id);
             }
             catch (Exception ex)
@@ -349,41 +340,90 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ĞÂÔöÊµÌå¡£
-        /// <para>µ± Id=0 Ê±£¬Êı¾İ¿â×Ô¶¯µİÔöÖ÷¼ü£»·ñÔòÊ¹ÓÃÔ­ Id£¬ÈôÖ÷¼üÖØ¸´Ôò±¨´í¡£</para>
+        /// éƒ¨åˆ†æ›´æ–°ï¼šä»…æ›´æ–°æŒ‡å®šå±æ€§é›†åˆã€‚
         /// </summary>
-        /// <param name="entity">ÒªĞÂÔöµÄÊµÌå¶ÔÏó¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûºÍĞÂÔöÊµÌåÊı¾İµÄ FResult ¶ÔÏó¡£</returns>
+        public virtual async Task<FResult<TEntity>> UpdatePartialAsync(long id, IDictionary<string, object?> values)
+        {
+            if (values == null || values.Count == 0)
+                return FResult<TEntity>.Fail("No values provided.", ErrorCode.InvalidParameter, id);
+            try
+            {
+                var entity = await _dbSet.FirstOrDefaultAsync(e => e.Id == id);
+                if (entity == null)
+                    return FResult<TEntity>.Fail("Entity to update was not found.", ErrorCode.NotFound, id);
+
+                var entry = _context.Entry(entity);
+                foreach (var kv in values)
+                {
+                    var prop = entry.Property(kv.Key);
+                    if (prop == null) continue;
+                    prop.CurrentValue = kv.Value;
+                    prop.IsModified = true;
+                }
+                if (entity is UpdatableEntity u)
+                {
+                    u.UpdatedAt = DateTime.UtcNow;
+                    entry.Property(nameof(UpdatableEntity.UpdatedAt)).IsModified = true;
+                }
+                await _context.SaveChangesAsync();
+                return FResult<TEntity>.Ok(entity, "Entity partial updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return FResult<TEntity>.Fail("Exception occurred while partial updating: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// åœ¨äº‹åŠ¡ä¸­æ‰§è¡Œè‡ªå®šä¹‰æ“ä½œã€‚
+        /// </summary>
+        public virtual async Task<FResult> ExecuteInTransactionAsync(Func<Task> action)
+        {
+            await using var tx = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await action();
+                await _context.SaveChangesAsync();
+                await tx.CommitAsync();
+                return FResult.Ok("Transaction executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                await tx.RollbackAsync();
+                return FResult.Fail("Exception occurred in transaction: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// æ–°å¢å®ä½“ã€‚
+        /// <para>å½“ Id=0 æ—¶ï¼Œæ•°æ®åº“è‡ªåŠ¨é€’å¢ä¸»é”®ï¼›å¦åˆ™ä½¿ç”¨åŸ Idï¼Œè‹¥ä¸»é”®é‡å¤åˆ™æŠ¥é”™ã€‚</para>
+        /// </summary>
+        /// <param name="entity">è¦æ–°å¢çš„å®ä½“å¯¹è±¡ã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœå’Œæ–°å¢å®ä½“æ•°æ®çš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult<TEntity>> AddAsync(TEntity entity)
         {
             try
             {
                 if (entity == null)
                     return FResult<TEntity>.Fail("Entity cannot be null.", ErrorCode.InvalidParameter);
-
                 if (entity.Id != 0)
                 {
-                    // ¼ì²éÖ÷¼üÊÇ·ñÒÑ´æÔÚ
                     var exists = await _dbSet.AsNoTracking().AnyAsync(e => e.Id == entity.Id);
                     if (exists)
                         return FResult<TEntity>.Fail("Entity with the same Id already exists.", ErrorCode.DuplicateData, entity.Id);
                 }
-
-                // ÉèÖÃ´´½¨Ê±¼ä
-                entity.CreatedAt = DateTime.Now;
-                // Èç¹ûÊÇ UpdatableEntity£¬Ò²ÉèÖÃ¸üĞÂÊ±¼ä
+                var now = DateTime.UtcNow;
+                entity.CreatedAt = now;
                 if (entity is UpdatableEntity updatable)
                 {
-                    updatable.UpdatedAt = DateTime.Now;
+                    updatable.UpdatedAt = now;
                 }
-
                 _dbSet.Add(entity);
                 await _context.SaveChangesAsync();
                 return FResult<TEntity>.Ok(entity, "Entity added successfully.");
             }
             catch (DbUpdateException dbEx)
             {
-                // Ö÷¼ü³åÍ»µÈÊı¾İ¿âÒì³£
                 return FResult<TEntity>.Fail("Database error occurred while adding entity: {0}", ErrorCode.DatabaseUpdateFailed, dbEx, dbEx.Message);
             }
             catch (Exception ex)
@@ -393,10 +433,41 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ÎïÀíÉ¾³ıÊµÌå£¨´ÓÊı¾İ¿âÖĞÒÆ³ı£©¡£
+        /// æ‰¹é‡æ–°å¢å®ä½“ï¼ˆä½¿ç”¨äº‹åŠ¡ï¼‰ã€‚
         /// </summary>
-        /// <param name="id">ÒªÉ¾³ıµÄÊµÌåÖ÷¼ü Id¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="entities">è¦æ–°å¢çš„å®ä½“é›†åˆã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœçš„ FResult å¯¹è±¡ã€‚</returns>
+        public virtual async Task<FResult> BatchAddAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null || !entities.Any())
+                return FResult.Fail("Entities collection cannot be null or empty.", ErrorCode.InvalidParameter);
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var now = DateTime.UtcNow;
+                foreach (var entity in entities)
+                {
+                    entity.CreatedAt = now;
+                    if (entity is UpdatableEntity updatable)
+                        updatable.UpdatedAt = now;
+                }
+                await _dbSet.AddRangeAsync(entities);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return FResult.Ok("Batch add successful.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return FResult.Fail("Exception occurred during batch add: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// ç‰©ç†åˆ é™¤å®ä½“ï¼ˆä»æ•°æ®åº“ä¸­ç§»é™¤ï¼‰ã€‚
+        /// </summary>
+        /// <param name="id">è¦åˆ é™¤çš„å®ä½“ä¸»é”® Idã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœçš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult> DeleteAsync(long id)
         {
             try
@@ -416,10 +487,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ÈíÉ¾³ıÊµÌå£¨½« IsDeleted ÉèÎª true£¬½öµ±ÊµÌåÓĞ IsDeleted ÊôĞÔÊ±ÓĞĞ§£©¡£
+        /// è½¯åˆ é™¤å®ä½“ï¼ˆå°† IsDeleted è®¾ä¸º trueï¼Œä»…å½“å®ä½“æœ‰ IsDeleted å±æ€§æ—¶æœ‰æ•ˆï¼‰ã€‚
         /// </summary>
-        /// <param name="id">ÒªÈíÉ¾³ıµÄÊµÌåÖ÷¼ü Id¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="id">è¦è½¯åˆ é™¤çš„å®ä½“ä¸»é”® Idã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœçš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult> SoftDeleteAsync(long id)
         {
             try
@@ -443,10 +514,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// »Ö¸´ÈíÉ¾³ıÊµÌå£¨½« IsDeleted ÉèÎª false£¬½öµ±ÊµÌåÓĞ IsDeleted ÊôĞÔÊ±ÓĞĞ§£©¡£
+        /// æ¢å¤è½¯åˆ é™¤å®ä½“ï¼ˆå°† IsDeleted è®¾ä¸º falseï¼Œä»…å½“å®ä½“æœ‰ IsDeleted å±æ€§æ—¶æœ‰æ•ˆï¼‰ã€‚
         /// </summary>
-        /// <param name="id">Òª»Ö¸´µÄÊµÌåÖ÷¼ü Id¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="id">è¦æ¢å¤çš„å®ä½“ä¸»é”® Idã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœçš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult> RestoreAsync(long id)
         {
             try
@@ -470,45 +541,15 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ÅúÁ¿ĞÂÔöÊµÌå£¨Ê¹ÓÃÊÂÎñ£©¡£
+        /// æ‰¹é‡ç‰©ç†åˆ é™¤å®ä½“ï¼ˆä½¿ç”¨äº‹åŠ¡ï¼‰ã€‚
         /// </summary>
-        /// <param name="entities">ÒªĞÂÔöµÄÊµÌå¼¯ºÏ¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûµÄ FResult ¶ÔÏó¡£</returns>
-        public virtual async Task<FResult> BatchAddAsync(IEnumerable<TEntity> entities)
-        {
-            if (entities == null || !entities.Any())
-                return FResult.Fail("Entities collection cannot be null or empty.", ErrorCode.InvalidParameter);
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                foreach (var entity in entities)
-                {
-                    entity.CreatedAt = DateTime.Now;
-                    if (entity is UpdatableEntity updatable)
-                        updatable.UpdatedAt = DateTime.Now;
-                }
-                await _dbSet.AddRangeAsync(entities);
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-                return FResult.Ok("Batch add successful.");
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return FResult.Fail("Exception occurred during batch add: {0}", ErrorCode.Exception, ex, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// ÅúÁ¿ÎïÀíÉ¾³ıÊµÌå£¨Ê¹ÓÃÊÂÎñ£©¡£
-        /// </summary>
-        /// <param name="ids">ÒªÉ¾³ıµÄÊµÌåÖ÷¼ü¼¯ºÏ¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="ids">è¦åˆ é™¤çš„å®ä½“ä¸»é”®é›†åˆã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœçš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult> BatchDeleteAsync(IEnumerable<long> ids)
         {
             if (ids == null || !ids.Any())
                 return FResult.Fail("Ids collection cannot be null or empty.", ErrorCode.InvalidParameter);
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var entities = await _dbSet.Where(e => ids.Contains(e.Id)).ToListAsync();
@@ -527,10 +568,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ÅúÁ¿ÈíÉ¾³ıÊµÌå£¨Ê¹ÓÃÊÂÎñ£©¡£
+        /// æ‰¹é‡è½¯åˆ é™¤å®ä½“ï¼ˆä½¿ç”¨äº‹åŠ¡ï¼‰ã€‚
         /// </summary>
-        /// <param name="ids">ÒªÈíÉ¾³ıµÄÊµÌåÖ÷¼ü¼¯ºÏ¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="ids">è¦è½¯åˆ é™¤çš„å®ä½“ä¸»é”®é›†åˆã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœçš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult> BatchSoftDeleteAsync(IEnumerable<long> ids)
         {
             if (ids == null || !ids.Any())
@@ -560,10 +601,10 @@ namespace EFCoreLayerKit.Repositories
         }
 
         /// <summary>
-        /// ÅúÁ¿»Ö¸´ÈíÉ¾³ıÊµÌå£¨½« IsDeleted ÉèÎª false£¬½öµ±ÊµÌåÓĞ IsDeleted ÊôĞÔÊ±ÓĞĞ§£¬Ê¹ÓÃÊÂÎñ£©¡£
+        /// æ‰¹é‡æ¢å¤è½¯åˆ é™¤å®ä½“ï¼ˆå°† IsDeleted è®¾ä¸º falseï¼Œä»…å½“å®ä½“æœ‰ IsDeleted å±æ€§æ—¶æœ‰æ•ˆï¼Œä½¿ç”¨äº‹åŠ¡ï¼‰ã€‚
         /// </summary>
-        /// <param name="ids">Òª»Ö¸´µÄÊµÌåÖ÷¼ü¼¯ºÏ¡£</param>
-        /// <returns>°üº¬²Ù×÷½á¹ûµÄ FResult ¶ÔÏó¡£</returns>
+        /// <param name="ids">è¦æ¢å¤çš„å®ä½“ä¸»é”®é›†åˆã€‚</param>
+        /// <returns>åŒ…å«æ“ä½œç»“æœçš„ FResult å¯¹è±¡ã€‚</returns>
         public virtual async Task<FResult> BatchRestoreAsync(IEnumerable<long> ids)
         {
             if (ids == null || !ids.Any())
