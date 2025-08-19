@@ -4,7 +4,10 @@ using EFCoreLayerKit.Entities;
 using EFCoreLayerKit.QueryModels;
 using EFCoreLayerKit.Results;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 
 namespace EFCoreLayerKit.Repositories
 {
@@ -249,6 +252,87 @@ namespace EFCoreLayerKit.Repositories
             }
         }
 
+
+        /// <summary>
+        /// 基于“原生 SQL where 片段”的分页查询（绕过表达式树翻译）。
+        /// 会将传入的 <paramref name="where"/>（不含 WHERE 关键字）拼接成
+        /// SELECT * FROM {表名} [WHERE …] ，再使用 FromSqlRaw 执行，并在外层继续应用 <see cref="QueryOptions{TEntity}"/> 的 Include / 排序 / IgnoreQueryFilters。
+        /// 支持占位符 {0},{1}…
+        /// </summary>
+        /// <param name="where">
+        /// 纯条件片段（不含 “WHERE”）。可为空或空字符串表示不过滤。
+        /// 示例："IsDeleted = 0 AND AuthorName = {0} AND LikeCount &gt;= {1}"。
+        /// 禁止包含分号 ;（多语句执行将被拒绝）。
+        /// </param>
+        /// <param name="whereArgs">
+        /// 与 <paramref name="where"/> 中占位符顺序对应的参数数组；可为 null（等价于空数组）。
+        /// 例如上例对应 new object[] { "tom", 5 }。
+        /// </param>
+        /// <param name="pageIndex">页码（从 1 开始，若 &lt;1 自动归 1）。</param>
+        /// <param name="pageSize">每页大小（若 &lt;1 自动归 10）。</param>
+        /// <param name="options">
+        /// 查询选项：
+        /// <list type="bullet">
+        /// <item><description>IgnoreQueryFilters：是否忽略全局过滤器</description></item>
+        /// <item><description>Includes：导航属性包含（在 FromSqlRaw 外层仍可追加）</description></item>
+        /// <item><description>OrderBys：排序（若有多条按顺序 ThenBy）</description></item>
+        /// </list>
+        /// </param>
+        /// <returns>
+        /// 返回分页结果：
+        /// <list type="bullet">
+        /// <item><description><see cref="FPagedResult{TEntity}.Data"/>：当前页数据</description></item>
+        /// <item><description><see cref="FPagedResult{TEntity}.Total"/>：总记录数（同一 IQueryable 上 CountAsync 得到）</description></item>
+        /// <item><description>失败时 Success=false 且 Code/Message 说明原因</description></item>
+        /// </list>
+        /// </returns>
+        public virtual async Task<FPagedResult<TEntity>> GetPagedAsync(string where, object[]? whereArgs, int pageIndex, int pageSize, QueryOptions<TEntity>? options = null)
+        {
+            try
+            {
+                pageIndex = pageIndex < 1 ? 1 : pageIndex;
+                pageSize = pageSize < 1 ? 10 : pageSize;
+
+                // 简单安全校验（可按需增强）
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    if (where.IndexOf(';') >= 0)
+                        return FPagedResult<TEntity>.Fail("Illegal character ';' in where.", ErrorCode.InvalidParameter);
+                }
+
+                // 取得真实表名（支持 schema）
+                var entityType = _context.Model.FindEntityType(typeof(TEntity))
+                                 ?? throw new InvalidOperationException($"Entity {typeof(TEntity).Name} not mapped.");
+                var tableName = entityType.GetSchema() is { Length: > 0 } schema
+                    ? $"{schema}.{entityType.GetTableName()}"
+                    : entityType.GetTableName();
+
+                // 组装基础 SQL
+                var sql = string.IsNullOrWhiteSpace(where)
+                    ? $"SELECT * FROM {tableName}"
+                    : $"SELECT * FROM {tableName} WHERE {where}";
+
+                // 生成 IQueryable
+                var parameters = whereArgs ?? Array.Empty<object>();
+                IQueryable<TEntity> query = _dbSet.FromSqlRaw(sql, parameters);
+
+                // 应用 QueryOptions（包含 IgnoreQueryFilters / Includes / OrderBys）
+                query = query.AsNoTracking().ApplyQueryOption(options);
+
+                // 分页
+                var total = await query.CountAsync();
+                var data = await query.Skip((pageIndex - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
+
+                return FPagedResult<TEntity>.Ok(data, total, pageIndex, pageSize, "Paged entities fetched successfully (raw where).");
+            }
+            catch (Exception ex)
+            {
+                return FPagedResult<TEntity>.Fail("Raw where paged query failed: {0}", ErrorCode.Exception, ex, ex.Message);
+            }
+        }
+
         /// <summary>
         /// 分页查询实体列表（支持排序）。
         /// </summary>
@@ -261,8 +345,13 @@ namespace EFCoreLayerKit.Repositories
         {
             try
             {
+                pageIndex = pageIndex < 1 ? 1 : pageIndex;
+                pageSize = pageSize < 1 ? 10 : pageSize;
+
                 var query = _dbSet.AsNoTracking().Where(predicate);
+
                 query = query.ApplyQueryOption(options);
+
                 var total = await query.CountAsync();
                 var data = await query.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 return FPagedResult<TEntity>.Ok(data, total, pageIndex, pageSize, "Paged entities fetched successfully.");
